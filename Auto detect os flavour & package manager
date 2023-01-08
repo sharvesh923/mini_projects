@@ -5,8 +5,6 @@ uname
 echo os flavour
 platform=` cat /etc/os-release | grep -i ID | awk -F "=" '{print $2}'| grep -i ubuntu`
 s1="ubuntu"
-#echo enter the flavour for n:
-#read
 if [ $platform == ubuntu ]
 then
 sudo apt-get update &&
