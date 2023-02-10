@@ -3,6 +3,8 @@
 resource "aws_vpc" "NEW_VPC" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
     Name = "NEW_VPC"
@@ -17,11 +19,10 @@ resource "aws_internet_gateway" "my_igw"{
   }
 }
 # creating public subnet 1
-resource "aws_subnet" "public_sub_1"{
-  cidr_block       = "10.0.2.0/24"
-  vpc_id           = aws_vpc.NEW_VPC.id
-  availability_zone = "us-east-2a"
-  
+resource "aws_subnet" "public_sub_1" {
+  vpc_id     = aws_vpc.NEW_VPC.id
+  cidr_block = "10.0.0.0/24"
+
   tags = {
     Name = "public_sub_1"
   }
@@ -71,54 +72,32 @@ resource "aws_security_group" "my_sg_1" {
    Name = "my_sg_1"
    }
 }
-/* # creating network_interface
+   
+ # creating network_interface
 
-resource "aws_network_interface" "my_ni"{
-  subnet_id        = aws_subnet.public_sub_1.id
-  private_ips      = ["10.0.2.25"]
-  security_groups  = [aws_security_group.my_sg_1.id]
-  attachment {
-    instance       = "aws_instance.my_instance.id"
-    device_index   = 1
-  }
-  tags = {
-    Name = "my_ni"
-    }
- 
-} */
+resource "aws_network_interface" "test" {
+  subnet_id       = aws_subnet.public_sub_1.id
+}
+
 # creating key pair for instance
 
 resource "aws_key_pair" "aws4" {
   key_name   = "aws4"
   public_key = var.public_key_aws4
 }
-# creating ubuntu machine based on region selected
-
-# resource "aws_instance" "my_instance" {
-#   ami              = lookup(var.amis,var.region, "not found")
-#   instance_type    = var.instance_type[0]
-#   key_name         = "aws4"
-#   availability_zone = "us-east-2a"
-#   root_block_device {
-#      volume_size    = "10"
-#     volume_type    = "gp2"
-#   }
-#   user_data = <<-EOF
-#                #!/bin/bash
-#                # Update the machine
-#                sudo apt-get update
-#                sudo apt-get upgrade -y
-#                # Install Nginx
-#                sudo apt-get install nginx -y
-#                # Start Nginx
-#                sudo systemctl start nginx
-#                # Enable Nginx to start at boot
-#                sudo systemctl enable nginx
-#                sudo bash -c "echo hello every one > /usr/share/nginx/html/index.html"
-#                sudo systemctl restart nginx
-#                   EOF
-
-#   tags = {
-#     Name = "nginx_web_server"
-#   }
-# }
+#creating ubuntu machine based on region selected
+resource "aws_instance" "my_instance" {
+  ami           = lookup(var.amis,var.region, "not found")
+  instance_type = var.instance_type[0]
+  key_name      = "aws4"
+  subnet_id     = aws_subnet.public_sub_1.id
+  vpc_security_group_ids = [aws_security_group.my_sg_1.id]
+  associate_public_ip_address = true
+  root_block_device {
+    volume_size    = "10"
+    volume_type    = "gp2"
+  }
+  tags = {
+    Name = "nginx_web_server"
+  }
+}
