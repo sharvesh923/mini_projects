@@ -12,4 +12,4 @@ sudo apt update
 
 sudo apt install jenkins -y
 
-sudo systemctl status jenkins
+sudo systemctl status jenkins | grep Active:
