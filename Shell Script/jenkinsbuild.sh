@@ -13,4 +13,4 @@ sudo apt update
 sudo apt install jenkins -y
 
 sudo systemctl status jenkins | grep Active:
-sudo cat /var/jenkins_home/secrets/initialAdminPassword
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
