@@ -1,0 +1,15 @@
+#Bash script to Auto detect os flavour & suituable package manager.
+#!/bin/sh/
+echo Os type
+uname
+echo os flavour
+platform=` cat /etc/os-release | grep -i ID | awk -F "=" '{print $2}'| grep -i ubuntu`
+s1="ubuntu"
+if [ $platform == ubuntu ]
+then
+sudo apt-get update &&
+ sudo apt-get install docker -y
+else
+ sudo yum install docker
+
+fi
