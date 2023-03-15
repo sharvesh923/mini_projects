@@ -21,7 +21,7 @@ spec:
         - containerPort: 80
       imagePullSecrets:
           - name: my-secret
-
+---
 apiVersion: v1
 kind: Service
 metadata:
