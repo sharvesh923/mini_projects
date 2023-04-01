@@ -2,10 +2,10 @@ variable "region" {
   default = "ap-southeast-1"
 }
 variable "access_key" {
-  default = "AKIA2GJ55YYW4AIHTFZW"
+  default = "your access key"
 }
 variable "secret_key" {
-  default = "k4K83Rd1vX3g2OzzqBYveJza2ArD9PnM+kLgSiyj"
+  default = "your secret key"
 } 
 # list of instance types
 variable "instance_type" {
