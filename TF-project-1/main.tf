@@ -85,24 +85,21 @@ resource "aws_key_pair" "aws4" {
   key_name   = "aws4"
   public_key = var.public_key_aws4
 }
-# creating data block to ref user_data.tpl
-data "template_file" "user_data" {
-  template = "${file("D:/devops class/terraform/TF-project-1/user_data.tpl")}"
-}
+
 #creating ubuntu machine based on region selected
 resource "aws_instance" "my_instance" {
-  ami           = lookup(var.amis,var.region, "not found")
+  ami           = lookup(var.amis,var.region,"not found")
   instance_type = var.instance_type[0]
   key_name      = "aws4"
   subnet_id     = aws_subnet.public_sub_1.id
   vpc_security_group_ids = [aws_security_group.my_sg_1.id]
   associate_public_ip_address = true
-  user_data              = "${data.template_file.user_data.rendered}"
-  root_block_device {
+  user_data = file("user_data.sh") 
+  root_block_device {                                                                   
     volume_size    = "10"
     volume_type    = "gp2"
   }
   tags = {
-    Name = "nginx_web_server"
+    Name = "nginx_webapp_server"
   }
 }
